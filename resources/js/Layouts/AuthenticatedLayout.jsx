@@ -6,7 +6,16 @@ import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+    const { auth, monitoringStatus } = usePage().props;
+    const user = auth.user;
+
+    const monitoringHealth = monitoringStatus?.status ?? 'unknown';
+    const monitoringColor =
+        monitoringHealth === 'up'
+            ? 'bg-emerald-500'
+            : monitoringHealth === 'degraded'
+              ? 'bg-amber-500'
+              : 'bg-rose-500';
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -29,6 +38,18 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current('dashboard')}
                                 >
                                     Dashboard
+                                </NavLink>
+                                <NavLink
+                                    href={route('monitoring.index')}
+                                    active={route().current('monitoring.*')}
+                                >
+                                    <span className="flex items-center gap-2">
+                                        Monitoring
+                                        <span
+                                            className={`h-2 w-2 rounded-full ${monitoringColor}`}
+                                            aria-label={`Monitoring status: ${monitoringHealth}`}
+                                        ></span>
+                                    </span>
                                 </NavLink>
                             </div>
                         </div>
@@ -133,6 +154,16 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current('dashboard')}
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('monitoring.index')}
+                            active={route().current('monitoring.*')}
+                        >
+                            Monitoring
+                            <span
+                                className={`ms-2 inline-flex h-2 w-2 rounded-full ${monitoringColor}`}
+                                aria-hidden
+                            ></span>
                         </ResponsiveNavLink>
                     </div>
 
