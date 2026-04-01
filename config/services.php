@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'skincare_monitoring' => [
+        'base_url' => env('BACKEND_MONITORING_BASE_URL', 'http://127.0.0.1:8000'),
+        'api_key' => env('BACKEND_MONITORING_API_KEY'),
+        'timeout' => env('BACKEND_MONITORING_TIMEOUT', 10),
+    ],
+
 ];
