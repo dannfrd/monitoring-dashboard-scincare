@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	:root {
+		--brand-950: #0f2f24;
+		--brand-900: #164733;
+		--brand-700: #278955;
+		--brand-600: #32a061;
+		--brand-500: #4fcf79;
+		--brand-300: #a8eebf;
+		--brand-100: #e9fcee;
+		--brand-surface: #f4fbf6;
+		--brand-card: #ffffff;
+		--brand-muted: #6a8476;
+	}
+
+	body {
+		@apply antialiased;
+		background:
+			radial-gradient(900px circle at -10% -10%, rgba(79, 207, 121, 0.25), transparent 60%),
+			radial-gradient(700px circle at 110% -10%, rgba(50, 160, 97, 0.2), transparent 60%),
+			var(--brand-surface);
+		color: var(--brand-950);
+	}
+}
+
+@layer components {
+	.brand-page-wrap {
+		@apply min-h-screen;
+		background:
+			radial-gradient(1200px circle at -20% 0%, rgba(79, 207, 121, 0.2), transparent 62%),
+			radial-gradient(900px circle at 120% 10%, rgba(39, 137, 85, 0.16), transparent 55%),
+			var(--brand-surface);
+	}
+
+	.brand-card {
+		@apply rounded-3xl border shadow-sm;
+		border-color: rgba(39, 137, 85, 0.14);
+		background: var(--brand-card);
+	}
+
+	.brand-input {
+		@apply rounded-2xl border px-4 py-2.5 text-sm shadow-sm;
+		border-color: rgba(39, 137, 85, 0.2);
+		background: #fff;
+	}
+
+	.brand-input:focus {
+		outline: none;
+		border-color: rgba(50, 160, 97, 0.6);
+		box-shadow: 0 0 0 3px rgba(79, 207, 121, 0.23);
+	}
+}

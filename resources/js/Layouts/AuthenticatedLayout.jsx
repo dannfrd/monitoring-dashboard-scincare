@@ -21,14 +21,15 @@ export default function AuthenticatedLayout({ header, children }) {
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
+        <div className="brand-page-wrap min-h-screen">
+            <nav className="sticky top-0 z-30 border-b border-emerald-100/80 bg-white/90 backdrop-blur">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                <Link href={route('dashboard')} className="flex items-center gap-2">
+                                    <ApplicationLogo className="block h-9 w-auto fill-current text-emerald-600" />
+                                    <span className="text-sm font-semibold tracking-wide text-emerald-900">SkinCare Admin</span>
                                 </Link>
                             </div>
 
@@ -51,6 +52,24 @@ export default function AuthenticatedLayout({ header, children }) {
                                         ></span>
                                     </span>
                                 </NavLink>
+                                <NavLink
+                                    href={route('analysis.index')}
+                                    active={route().current('analysis.*')}
+                                >
+                                    Analisis User
+                                </NavLink>
+                                <NavLink
+                                    href={route('recommendations.index')}
+                                    active={route().current('recommendations.*')}
+                                >
+                                    Rekomendasi
+                                </NavLink>
+                                <NavLink
+                                    href={route('ingredients.index')}
+                                    active={route().current('ingredients.*')}
+                                >
+                                    Data Bahan
+                                </NavLink>
                             </div>
                         </div>
 
@@ -61,12 +80,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                                className="inline-flex items-center rounded-2xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-medium leading-4 text-emerald-800 transition duration-150 ease-in-out hover:bg-emerald-100 hover:text-emerald-900 focus:outline-none"
                                             >
                                                 {user.name}
 
                                                 <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
+                                                    className="-me-0.5 ms-2 h-4 w-4 text-emerald-700"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20"
                                                     fill="currentColor"
@@ -82,11 +101,6 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('logout')}
                                             method="post"
@@ -106,7 +120,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         (previousState) => !previousState,
                                     )
                                 }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                className="inline-flex items-center justify-center rounded-xl p-2 text-emerald-600 transition duration-150 ease-in-out hover:bg-emerald-50 hover:text-emerald-700 focus:bg-emerald-50 focus:text-emerald-700 focus:outline-none"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -165,22 +179,37 @@ export default function AuthenticatedLayout({ header, children }) {
                                 aria-hidden
                             ></span>
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('analysis.index')}
+                            active={route().current('analysis.*')}
+                        >
+                            Analisis User
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('recommendations.index')}
+                            active={route().current('recommendations.*')}
+                        >
+                            Rekomendasi
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('ingredients.index')}
+                            active={route().current('ingredients.*')}
+                        >
+                            Data Bahan
+                        </ResponsiveNavLink>
                     </div>
 
-                    <div className="border-t border-gray-200 pb-1 pt-4">
+                    <div className="border-t border-emerald-100 pb-1 pt-4">
                         <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
+                            <div className="text-base font-medium text-emerald-900">
                                 {user.name}
                             </div>
-                            <div className="text-sm font-medium text-gray-500">
+                            <div className="text-sm font-medium text-emerald-700/70">
                                 {user.email}
                             </div>
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
                                 href={route('logout')}
@@ -194,7 +223,7 @@ export default function AuthenticatedLayout({ header, children }) {
             </nav>
 
             {header && (
-                <header className="bg-white shadow">
+                <header className="border-b border-emerald-100/60 bg-white/70 shadow-sm backdrop-blur">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>

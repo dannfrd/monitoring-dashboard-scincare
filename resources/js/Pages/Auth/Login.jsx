@@ -4,9 +4,9 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ status }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -23,15 +23,27 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
+            <Head title="Admin Login" />
+
+            <div className="mb-7">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600">
+                    Admin Authentication
+                </p>
+                <h2 className="mt-3 text-3xl font-bold text-emerald-950">
+                    Selamat datang kembali
+                </h2>
+                <p className="mt-2 text-sm text-emerald-800/80">
+                    Gunakan akun admin untuk masuk ke panel monitoring SkinCare AI.
+                </p>
+            </div>
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
                     {status}
                 </div>
             )}
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="space-y-5">
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 
@@ -40,7 +52,8 @@ export default function Login({ status, canResetPassword }) {
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="mt-2 block w-full"
+                        placeholder="admin@skincare.local"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
@@ -57,7 +70,8 @@ export default function Login({ status, canResetPassword }) {
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="mt-2 block w-full"
+                        placeholder="Masukkan password"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
@@ -65,7 +79,7 @@ export default function Login({ status, canResetPassword }) {
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4 block">
+                <div className="block">
                     <label className="flex items-center">
                         <Checkbox
                             name="remember"
@@ -74,26 +88,21 @@ export default function Login({ status, canResetPassword }) {
                                 setData('remember', e.target.checked)
                             }
                         />
-                        <span className="ms-2 text-sm text-gray-600">
+                        <span className="ms-2 text-sm text-emerald-800/80">
                             Remember me
                         </span>
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
+                <div className="pt-2">
+                    <PrimaryButton className="w-full justify-center py-3 text-sm" disabled={processing}>
+                        {processing ? 'Memproses Login...' : 'Masuk ke Dashboard'}
                     </PrimaryButton>
                 </div>
+
+                <p className="text-center text-xs text-emerald-800/70">
+                    Halaman ini hanya untuk admin panel monitoring.
+                </p>
             </form>
         </GuestLayout>
     );
