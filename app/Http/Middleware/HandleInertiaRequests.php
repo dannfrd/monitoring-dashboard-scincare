@@ -32,10 +32,12 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $adminUser = $request->session()->get('admin_user');
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $adminUser,
             ],
             'monitoringStatus' => fn () => $this->monitoringStatus($request),
         ];
@@ -43,7 +45,7 @@ class HandleInertiaRequests extends Middleware
 
     protected function monitoringStatus(Request $request): array
     {
-        if (! $request->user()) {
+        if (! $request->session()->get('admin_authenticated', false)) {
             return [];
         }
 

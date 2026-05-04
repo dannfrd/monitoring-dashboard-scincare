@@ -1,0 +1,111 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, usePage } from '@inertiajs/react';
+
+const MetricCard = ({ title, value, hint }) => (
+    <div className="brand-card p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700/90">{title}</p>
+        <p className="mt-2 text-3xl font-semibold text-emerald-950">{value}</p>
+        {hint ? <p className="mt-1 text-xs text-emerald-700/70">{hint}</p> : null}
+    </div>
+);
+
+const formatDateTime = (value) => {
+    if (!value) {
+        return '-';
+    }
+
+    try {
+        return new Date(value).toLocaleString('id-ID', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+        });
+    } catch (error) {
+        return value;
+    }
+};
+
+export default function ProductsIndex() {
+    const { products = [] } = usePage().props;
+
+    const totalProducts = products.length;
+    const withAnalysis = products.filter((item) => (item.analysis_count ?? 0) > 0).length;
+    const withScans = products.filter((item) => (item.scan_count ?? 0) > 0).length;
+
+    return (
+        <AuthenticatedLayout
+            header={
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Admin Data</p>
+                    <h2 className="mt-2 text-2xl font-semibold leading-tight text-emerald-950">
+                        Data Produk
+                    </h2>
+                </div>
+            }
+        >
+            <Head title="Data Produk" />
+
+            <div className="py-8">
+                <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
+                    <section>
+                        <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-700/85">
+                            Ringkasan Produk
+                        </h3>
+                        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <MetricCard title="Total Produk" value={totalProducts} />
+                            <MetricCard title="Produk Dianalisis" value={withAnalysis} />
+                            <MetricCard title="Produk dengan Scan" value={withScans} />
+                        </div>
+                    </section>
+
+                    <section>
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-700/85">
+                                Daftar Produk
+                            </h3>
+                            <span className="text-xs text-emerald-700/70">Menampilkan {totalProducts} produk</span>
+                        </div>
+                        <div className="brand-card mt-3 overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-emerald-100 text-sm">
+                                    <thead className="bg-emerald-50 text-left text-xs font-semibold uppercase tracking-wide text-emerald-700/85">
+                                        <tr>
+                                            <th className="px-4 py-3">ID</th>
+                                            <th className="px-4 py-3">Nama</th>
+                                            <th className="px-4 py-3">Brand</th>
+                                            <th className="px-4 py-3">Kategori</th>
+                                            <th className="px-4 py-3">Barcode</th>
+                                            <th className="px-4 py-3">Jumlah Scan</th>
+                                            <th className="px-4 py-3">Jumlah Analisis</th>
+                                            <th className="px-4 py-3">Terdaftar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-emerald-100 bg-white">
+                                        {products.map((item) => (
+                                            <tr key={item.id} className="hover:bg-emerald-50/45">
+                                                <td className="px-4 py-3 font-medium text-emerald-950">{item.id}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.name ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.brand ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.category ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.barcode ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.scan_count ?? 0}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.analysis_count ?? 0}</td>
+                                                <td className="px-4 py-3 text-emerald-700/75">{formatDateTime(item.created_at)}</td>
+                                            </tr>
+                                        ))}
+                                        {products.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="8" className="px-4 py-6 text-center text-emerald-700/75">
+                                                    Belum ada data produk.
+                                                </td>
+                                            </tr>
+                                        ) : null}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}
