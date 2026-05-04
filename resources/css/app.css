@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,12 +19,22 @@
 	}
 
 	body {
+		font-family: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
 		@apply antialiased;
 		background:
 			radial-gradient(900px circle at -10% -10%, rgba(79, 207, 121, 0.25), transparent 60%),
 			radial-gradient(700px circle at 110% -10%, rgba(50, 160, 97, 0.2), transparent 60%),
 			var(--brand-surface);
 		color: var(--brand-950);
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: 'Space Grotesk', 'Manrope', system-ui, -apple-system, sans-serif;
 	}
 }
 

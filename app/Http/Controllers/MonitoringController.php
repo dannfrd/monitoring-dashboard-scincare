@@ -29,8 +29,7 @@ class MonitoringController extends Controller
 
         return Inertia::render('Analysis/Index', [
             'analysisSummary' => $summary['analysis'] ?? [],
-            'recentAnalyses' => $this->attempt(fn () => $this->client->recentAnalyses(30), []),
-            'lastUpdated' => now()->toIso8601String(),
+            'analyses' => $this->attempt(fn () => $this->client->analyses(200), []),
         ]);
     }
 
@@ -59,46 +58,46 @@ class MonitoringController extends Controller
         ]);
     }
 
+    public function usersIndex(): Response
+    {
+        $users = $this->attempt(fn () => $this->client->users(200), []);
+
+        return Inertia::render('Users/Index', [
+            'users' => $users,
+            'lastUpdated' => now()->toIso8601String(),
+        ]);
+    }
+
     public function ingredientIndex(): Response
     {
         $summary = $this->attempt(fn () => $this->client->summary(), [
             'ingredients' => [],
         ]);
 
-        $recentAnalyses = $this->attempt(fn () => $this->client->recentAnalyses(100), []);
-
-        $usage = [];
-        foreach ($recentAnalyses as $entry) {
-            $matchedIngredients = $entry['matched_ingredients'] ?? data_get($entry, 'ai_analysis.matched_ingredients', []);
-
-            if (! is_array($matchedIngredients)) {
-                continue;
-            }
-
-            foreach ($matchedIngredients as $ingredient) {
-                $name = trim((string) $ingredient);
-                if ($name === '') {
-                    continue;
-                }
-
-                $usage[$name] = ($usage[$name] ?? 0) + 1;
-            }
-        }
-
-        arsort($usage);
-
-        $topUsage = collect(array_slice($usage, 0, 12, true))
-            ->map(fn (int $count, string $name) => [
-                'name' => $name,
-                'count' => $count,
-            ])
-            ->values()
-            ->all();
-
         return Inertia::render('Ingredients/Index', [
             'ingredientSummary' => $summary['ingredients'] ?? [],
-            'topIngredients' => $topUsage,
-            'lastUpdated' => now()->toIso8601String(),
+            'ingredients' => $this->attempt(fn () => $this->client->ingredients(300), []),
+        ]);
+    }
+
+    public function productsIndex(): Response
+    {
+        return Inertia::render('Products/Index', [
+            'products' => $this->attempt(fn () => $this->client->products(200), []),
+        ]);
+    }
+
+    public function analysisDetailsIndex(): Response
+    {
+        return Inertia::render('AnalysisDetails/Index', [
+            'analysisDetails' => $this->attempt(fn () => $this->client->analysisDetails(200), []),
+        ]);
+    }
+
+    public function userHistoriesIndex(): Response
+    {
+        return Inertia::render('UserHistories/Index', [
+            'userHistories' => $this->attempt(fn () => $this->client->userHistories(200), []),
         ]);
     }
 

@@ -24,20 +24,37 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, \App\Services\BackendMonitoringClient $client): RedirectResponse
     {
         $validated = $request->validate([
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        $adminEmail = (string) env('ADMIN_EMAIL', 'admin@skincare.local');
-        $adminPassword = (string) env('ADMIN_PASSWORD', 'admin12345');
-        $adminName = (string) env('ADMIN_NAME', 'Skincare Admin');
-
-        if ($validated['email'] !== $adminEmail || $validated['password'] !== $adminPassword) {
+        try {
+            $response = $client->login($validated['email'], $validated['password']);
+            $userData = $response['user'] ?? null;
+            
+            if (!$userData) {
+                throw ValidationException::withMessages([
+                    'email' => 'Email atau password admin tidak valid.',
+                ]);
+            }
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            if ($e->response->status() === 401) {
+                throw ValidationException::withMessages([
+                    'email' => 'Email atau password admin tidak valid.',
+                ]);
+            }
+            
+            \Illuminate\Support\Facades\Log::error('Backend login error: ' . $e->getMessage());
             throw ValidationException::withMessages([
-                'email' => 'Email atau password admin tidak valid.',
+                'email' => 'Terjadi kesalahan saat menghubungi server backend.',
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Backend login error: ' . $e->getMessage());
+            throw ValidationException::withMessages([
+                'email' => 'Terjadi kesalahan sistem.',
             ]);
         }
 
@@ -47,9 +64,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->put('admin_authenticated', true);
         $request->session()->put('admin_user', [
-            'name' => $adminName,
-            'email' => $adminEmail,
-            'role' => 'admin',
+            'id' => $userData['id'] ?? 0,
+            'name' => $userData['name'] ?? 'System Admin',
+            'email' => $userData['email'] ?? $validated['email'],
+            'role' => $userData['role'] ?? 'admin',
         ]);
 
         return redirect()->intended(route('dashboard', absolute: false));

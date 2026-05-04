@@ -5,7 +5,7 @@ export default function Dashboard() {
     const cards = [
         {
             title: 'Monitoring Backend',
-            description: 'Ambil data status layanan backend dan tampilkan kondisi sistem saat ini.',
+            description: 'Lihat data status layanan backend dan kondisi sistem saat ini.',
             cta: 'Buka Monitoring Sistem',
             href: route('monitoring.index'),
         },
@@ -14,6 +14,30 @@ export default function Dashboard() {
             description: 'Tinjau hasil analisis user terbaru beserta status prosesnya.',
             cta: 'Buka Data Analisis',
             href: route('analysis.index'),
+        },
+        {
+            title: 'Detail Analisis',
+            description: 'Lihat detail ingredient per analisis untuk verifikasi admin.',
+            cta: 'Buka Detail Analisis',
+            href: route('analysis-details.index'),
+        },
+        {
+            title: 'Data User',
+            description: 'Lihat daftar user yang sudah terdaftar beserta aktivitas analisisnya.',
+            cta: 'Buka Data User',
+            href: route('users.index'),
+        },
+        {
+            title: 'Histori User',
+            description: 'Pantau histori analisis yang disimpan oleh user.',
+            cta: 'Buka Histori User',
+            href: route('user-histories.index'),
+        },
+        {
+            title: 'Data Produk',
+            description: 'Pantau daftar produk dan aktivitas analisis terkait.',
+            cta: 'Buka Data Produk',
+            href: route('products.index'),
         },
         {
             title: 'Kelola Rekomendasi',

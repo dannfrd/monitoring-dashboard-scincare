@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const MetricCard = ({ title, value, hint }) => (
     <div className="brand-card p-4">
@@ -71,31 +71,10 @@ export default function Overview() {
     );
 
     const [dataset, setDataset] = useState(initialPayload);
-    const [isRefreshing, setIsRefreshing] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         setDataset(initialPayload);
     }, [initialPayload]);
-
-    const refreshData = useCallback(async () => {
-        setIsRefreshing(true);
-        setErrorMessage('');
-
-        try {
-            const response = await window.axios.get(route('monitoring.data'), {
-                params: {
-                    limit: Math.max(dataset.recentAnalyses.length || 0, 15),
-                },
-            });
-
-            setDataset(response.data);
-        } catch (error) {
-            setErrorMessage('Gagal memuat data monitoring');
-        } finally {
-            setIsRefreshing(false);
-        }
-    }, [dataset.recentAnalyses.length]);
 
     const analysis = dataset.analysisSummary;
     const ingredient = dataset.ingredientSummary;
@@ -105,23 +84,10 @@ export default function Overview() {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
                     <h2 className="text-xl font-semibold leading-tight text-emerald-950">
                         Monitoring Backend
                     </h2>
-                    <div className="flex items-center gap-3">
-                        <p className="text-sm text-emerald-700/75">
-                            Terakhir diambil: {formatDateTime(dataset.lastUpdated)}
-                        </p>
-                        <button
-                            type="button"
-                            onClick={refreshData}
-                            className="inline-flex items-center rounded-2xl border border-transparent bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2"
-                            disabled={isRefreshing}
-                        >
-                            {isRefreshing ? 'Mengambil data...' : 'Ambil Data'}
-                        </button>
-                    </div>
                 </div>
             }
         >
@@ -130,14 +96,8 @@ export default function Overview() {
             <div className="py-8">
                 <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
                     <p className="text-sm text-emerald-800/85">
-                        Halaman ini tidak update otomatis. Data hanya diambil saat halaman dibuka atau tombol <span className="font-semibold">Ambil Data</span> ditekan.
+                        Halaman ini menampilkan snapshot data saat halaman dibuka.
                     </p>
-
-                    {errorMessage && (
-                        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
-                            {errorMessage}
-                        </div>
-                    )}
 
                     <section>
                         <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-700/85">

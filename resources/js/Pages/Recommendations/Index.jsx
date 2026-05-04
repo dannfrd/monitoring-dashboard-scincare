@@ -1,5 +1,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
+
+const truncate = (value, maxLength = 220) => {
+    const text = typeof value === 'string' ? value : JSON.stringify(value ?? '-');
+    if (text.length <= maxLength) {
+        return text;
+    }
+
+    return `${text.slice(0, maxLength)}...`;
+};
 
 const formatDateTime = (value) => {
     if (!value) {
@@ -16,37 +25,17 @@ const formatDateTime = (value) => {
     }
 };
 
-const truncate = (value, maxLength = 220) => {
-    const text = typeof value === 'string' ? value : JSON.stringify(value ?? '-');
-    if (text.length <= maxLength) {
-        return text;
-    }
-
-    return `${text.slice(0, maxLength)}...`;
-};
-
 export default function RecommendationIndex() {
-    const { recommendations = [], lastUpdated = null } = usePage().props;
+    const { recommendations = [] } = usePage().props;
 
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Admin Flow</p>
-                        <h2 className="mt-2 text-2xl font-semibold leading-tight text-emerald-950">
-                            Kelola Rekomendasi
-                        </h2>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <p className="text-sm text-emerald-700/75">Terakhir diambil: {formatDateTime(lastUpdated)}</p>
-                        <Link
-                            href={route('recommendations.index')}
-                            className="inline-flex items-center rounded-2xl border border-transparent bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600"
-                        >
-                            Muat Ulang
-                        </Link>
-                    </div>
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Admin Flow</p>
+                    <h2 className="mt-2 text-2xl font-semibold leading-tight text-emerald-950">
+                        Kelola Rekomendasi
+                    </h2>
                 </div>
             }
         >

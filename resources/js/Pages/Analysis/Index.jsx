@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 
 const MetricCard = ({ title, value, hint }) => (
     <div className="brand-card p-4">
@@ -34,27 +34,16 @@ const truncate = (value, maxLength = 140) => {
 };
 
 export default function AnalysisIndex() {
-    const { analysisSummary = {}, recentAnalyses = [], lastUpdated = null } = usePage().props;
+    const { analysisSummary = {}, analyses = [] } = usePage().props;
 
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Admin Flow</p>
-                        <h2 className="mt-2 text-2xl font-semibold leading-tight text-emerald-950">
-                            Lihat Data Analisis User
-                        </h2>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <p className="text-sm text-emerald-700/75">Terakhir diambil: {formatDateTime(lastUpdated)}</p>
-                        <Link
-                            href={route('analysis.index')}
-                            className="inline-flex items-center rounded-2xl border border-transparent bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600"
-                        >
-                            Muat Ulang
-                        </Link>
-                    </div>
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Admin Flow</p>
+                    <h2 className="mt-2 text-2xl font-semibold leading-tight text-emerald-950">
+                        Lihat Data Analisis User
+                    </h2>
                 </div>
             }
         >
@@ -85,7 +74,7 @@ export default function AnalysisIndex() {
                             <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-700/85">
                                 Data Analisis User Terbaru
                             </h3>
-                            <span className="text-xs text-emerald-700/70">Menampilkan {recentAnalyses.length} data</span>
+                            <span className="text-xs text-emerald-700/70">Menampilkan {analyses.length} data</span>
                         </div>
                         <div className="brand-card mt-3 overflow-hidden">
                             <div className="overflow-x-auto">
@@ -101,7 +90,7 @@ export default function AnalysisIndex() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-emerald-100 bg-white">
-                                        {recentAnalyses.map((entry) => (
+                                        {analyses.map((entry) => (
                                             <tr key={entry.id} className="hover:bg-emerald-50/40">
                                                 <td className="px-4 py-3 font-medium text-emerald-950">{entry.id}</td>
                                                 <td className="px-4 py-3 text-emerald-800/90">{entry.user?.name ?? '-'}</td>
@@ -113,7 +102,7 @@ export default function AnalysisIndex() {
                                                 <td className="px-4 py-3 text-emerald-700/75">{formatDateTime(entry.created_at)}</td>
                                             </tr>
                                         ))}
-                                        {recentAnalyses.length === 0 ? (
+                                        {analyses.length === 0 ? (
                                             <tr>
                                                 <td colSpan="6" className="px-4 py-6 text-center text-emerald-700/75">
                                                     Belum ada data analisis user.

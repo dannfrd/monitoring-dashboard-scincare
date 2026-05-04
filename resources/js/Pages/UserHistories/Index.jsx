@@ -24,49 +24,44 @@ const formatDateTime = (value) => {
     }
 };
 
-export default function IngredientIndex() {
-    const { ingredientSummary = {}, ingredients = [] } = usePage().props;
+export default function UserHistoriesIndex() {
+    const { userHistories = [] } = usePage().props;
+
+    const totalHistories = userHistories.length;
+    const uniqueUsers = new Set(userHistories.map((item) => item.user_id).filter(Boolean)).size;
 
     return (
         <AuthenticatedLayout
             header={
                 <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Admin Flow</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">Admin Data</p>
                     <h2 className="mt-2 text-2xl font-semibold leading-tight text-emerald-950">
-                        Kelola Data Bahan
+                        Histori User
                     </h2>
                 </div>
             }
         >
-            <Head title="Kelola Data Bahan" />
+            <Head title="Histori User" />
 
             <div className="py-8">
                 <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
                     <section>
                         <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-700/85">
-                            Ringkasan Data Bahan
+                            Ringkasan Histori
                         </h3>
-                        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                            <MetricCard title="Total Ingredient" value={ingredientSummary.total ?? 0} />
-                            <MetricCard title="Risiko Rendah" value={ingredientSummary.low_risk ?? 0} />
-                            <MetricCard title="Risiko Sedang" value={ingredientSummary.medium_risk ?? 0} />
-                            <MetricCard title="Risiko Tinggi" value={ingredientSummary.high_risk ?? ingredientSummary.high_comedogenic ?? 0} />
-                            <MetricCard title="Risiko Tidak Diketahui" value={ingredientSummary.unknown_risk ?? 0} />
-                        </div>
-                        <div className="mt-2 grid gap-1 text-xs text-emerald-700/65 sm:grid-cols-2">
-                            <p>Data ingredient diperbarui: {formatDateTime(ingredientSummary.last_updated_at)}</p>
-                            <p>
-                                Legacy metric - Allergen: {ingredientSummary.allergens ?? 0}, Tidak Aman Hamil: {ingredientSummary.unsafe_for_pregnancy ?? 0}
-                            </p>
+                        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <MetricCard title="Total Histori" value={totalHistories} />
+                            <MetricCard title="User Aktif" value={uniqueUsers} />
+                            <MetricCard title="Histori Terbaru" value={totalHistories > 0 ? 'Ada' : 'Belum Ada'} />
                         </div>
                     </section>
 
                     <section>
                         <div className="flex items-center justify-between">
                             <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-700/85">
-                                Daftar Bahan
+                                Daftar Histori User
                             </h3>
-                            <span className="text-xs text-emerald-700/70">Menampilkan {ingredients.length} bahan</span>
+                            <span className="text-xs text-emerald-700/70">Menampilkan {totalHistories} histori</span>
                         </div>
                         <div className="brand-card mt-3 overflow-hidden">
                             <div className="overflow-x-auto">
@@ -74,28 +69,30 @@ export default function IngredientIndex() {
                                     <thead className="bg-emerald-50 text-left text-xs font-semibold uppercase tracking-wide text-emerald-700/85">
                                         <tr>
                                             <th className="px-4 py-3">ID</th>
-                                            <th className="px-4 py-3">Nama Bahan</th>
-                                            <th className="px-4 py-3">Fungsi</th>
-                                            <th className="px-4 py-3">Risk Level</th>
-                                            <th className="px-4 py-3">Dipakai di Analisis</th>
-                                            <th className="px-4 py-3">Terdaftar</th>
+                                            <th className="px-4 py-3">User</th>
+                                            <th className="px-4 py-3">Email</th>
+                                            <th className="px-4 py-3">Analisis</th>
+                                            <th className="px-4 py-3">Status</th>
+                                            <th className="px-4 py-3">Waktu Analisis</th>
+                                            <th className="px-4 py-3">Terlihat</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-emerald-100 bg-white">
-                                        {ingredients.map((item) => (
+                                        {userHistories.map((item) => (
                                             <tr key={item.id} className="hover:bg-emerald-50/45">
                                                 <td className="px-4 py-3 font-medium text-emerald-950">{item.id}</td>
-                                                <td className="px-4 py-3 text-emerald-800/90">{item.name ?? '-'}</td>
-                                                <td className="px-4 py-3 text-emerald-800/90">{item.function ?? '-'}</td>
-                                                <td className="px-4 py-3 text-emerald-800/90">{item.risk_level ?? '-'}</td>
-                                                <td className="px-4 py-3 text-emerald-800/90">{item.usage_count ?? 0} kali</td>
-                                                <td className="px-4 py-3 text-emerald-700/75">{formatDateTime(item.created_at)}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.user_name ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.user_email ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.analysis_id ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-800/90">{item.analysis_status ?? '-'}</td>
+                                                <td className="px-4 py-3 text-emerald-700/75">{formatDateTime(item.analysis_created_at)}</td>
+                                                <td className="px-4 py-3 text-emerald-700/75">{formatDateTime(item.viewed_at)}</td>
                                             </tr>
                                         ))}
-                                        {ingredients.length === 0 ? (
+                                        {userHistories.length === 0 ? (
                                             <tr>
-                                                <td colSpan="6" className="px-4 py-6 text-center text-emerald-700/75">
-                                                    Belum ada data bahan.
+                                                <td colSpan="7" className="px-4 py-6 text-center text-emerald-700/75">
+                                                    Belum ada histori user.
                                                 </td>
                                             </tr>
                                         ) : null}
